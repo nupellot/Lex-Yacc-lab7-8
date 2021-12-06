@@ -1,23 +1,16 @@
 %Start A B C D
 
-%%
+%%  // Секция правил
 
-<A,C>1 BEGIN D;
+<A,C>1    BEGIN D;  // Если А или С активны и после них идёт 0, то активируется метка D,
+<A,C>0    BEGIN A;  // а также деактивируются все остальные метки
+<B,D>0    BEGIN C;
+<B,D>1    BEGIN B;
 
-<A,C>0 BEGIN A;
+0   BEGIN A;  // При встрече 0 активируется метка А
+1   BEGIN B;  // При встрече 1 активируется метка В
 
-<B,D>0 BEGIN C;
+<C,D>[\s\t\n]    printf("True\n"); BEGIN 0;  // Успех. Деактивация всех меток
 
-<B,D>1 BEGIN B;
-
-0 BEGIN A;
-
-1 BEGIN B;
-
-<C,D>[\s\t\n] printf("True\n"); BEGIN 0;
-
-<A,B,C,D>[^01\n\s\t].*[\n\s\t] |
-
-[^01\n\s\t].*[\n\s\t] |
-
-[\n\s\t] printf("False\n"); BEGIN 0;
+[^01\n\s\t].*[\n\s\t]  |
+[\n\s\t]         printf("False\n"); BEGIN 0;  // Ошибка. Деактивация всех меток
